@@ -20,12 +20,12 @@ import {
 
 export function Signup_Signin_View() {
   return (
-    <Tabs defaultValue="account" className="w-[400px]">
+    <Tabs defaultValue="signin" className="w-[400px]">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="account">Sign up</TabsTrigger>
-        <TabsTrigger value="password">Sign in</TabsTrigger>
+        <TabsTrigger value="signup">Sign up</TabsTrigger>
+        <TabsTrigger value="signin">Sign in</TabsTrigger>
       </TabsList>
-      <TabsContent value="account">
+      <TabsContent value="signup">
         <Card>
           <CardHeader>
             <CardTitle>Sign up</CardTitle>
@@ -48,7 +48,7 @@ export function Signup_Signin_View() {
           </CardFooter>
         </Card>
       </TabsContent>
-      <TabsContent value="password">
+      <TabsContent value="signin">
         <Card>
           <CardHeader>
             <CardTitle>Sign in</CardTitle>
