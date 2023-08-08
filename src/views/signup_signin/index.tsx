@@ -16,9 +16,44 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-//
+import { useState } from "react"
+import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
-export function Signup_Signin_View() {
+
+const Signup_Signin_View=()=>{
+  const [email,setEmail]=useState('')
+  const [password,setPassword]=useState('')
+  const [message,setMessage]=useState<null|string>()
+  const router=useRouter()
+
+  async function signin(){
+    console.log(email,password)
+    const res= (await fetch('/api/signin',{method:'POST',cache:'no-cache',body:JSON.stringify({email,password})}))
+    console.log(res)
+    if(res.ok){
+      setMessage('Redirecting ...')
+      router.push('/dashboard')
+    }else{
+      setMessage('Wrong credentials')
+    }
+    return res;
+  }
+
+  async function signup(){
+    console.log(email,password);
+    const res=(await fetch('api/signup',{method:"POST",cache:'no-cache',body:JSON.stringify({email,password})}))
+    const jj=await res.json()
+    console.log(jj)
+    if(res.ok){
+      setMessage('New user created, please login')
+      console.log(res)
+    }else{
+      setMessage(jj.message)
+    }
+    return res
+  }
+
   return (
     <Tabs defaultValue="signin" className="w-[400px]">
       <TabsList className="grid w-full grid-cols-2">
@@ -36,15 +71,16 @@ export function Signup_Signin_View() {
           <CardContent className="space-y-2">
             <div className="space-y-1">
               <Label htmlFor="name">Email</Label>
-              <Input id="name" />
+              <Input onChange={(e)=>{setEmail(e.target.value)}} id="name" />
             </div>
             <div className="space-y-1">
               <Label htmlFor="username">Password</Label>
-              <Input id="username"/>
+              <Input onChange={(e)=>{setPassword(e.target.value)}} id="username"/>
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Sign up</Button>
+            <Button onClick={signup}>Sign up</Button>
+            {message&&<div className=" ml-5">{message}</div>}
           </CardFooter>
         </Card>
       </TabsContent>
@@ -59,18 +95,21 @@ export function Signup_Signin_View() {
           <CardContent className="space-y-2">
             <div className="space-y-1">
               <Label htmlFor="current">Email</Label>
-              <Input id="current" type="password" />
+              <Input onChange={(e)=>{setEmail(e.target.value)}} id="current" type="email" />
             </div>
             <div className="space-y-1">
               <Label htmlFor="new">Password</Label>
-              <Input id="new" type="password" />
+              <Input onChange={(e)=>{setPassword(e.target.value)}} id="new" type="password" />
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Sign in</Button>
+            <Button onClick={signin}>Sign in</Button>
+            {message&&<div  className=" ml-5">{message}</div>}
           </CardFooter>
         </Card>
       </TabsContent>
     </Tabs>
   )
 }
+
+export default Signup_Signin_View
