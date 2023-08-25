@@ -1,9 +1,10 @@
+import Link from "next/link";
 
 export default function Auth0(){
 
     return(
         <div>
-            <a href="/api/auth/login">Login</a>
+            <Link href="/api/auth/login">Login</Link>
         </div>
     )
 }
