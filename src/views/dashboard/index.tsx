@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 const DashboardView=({email}:{email:string|undefined})=>{
     const router=useRouter()
     const handleLogout=async()=>{
-        const l=await fetch(`${process.env.BASE_API}/api/logout`,{cache:'no-cache'})
+        const l=await fetch(`/api/logout`,{cache:'no-cache'})
         console.log(await l.json())
         if(l.ok){
             router.push('/')

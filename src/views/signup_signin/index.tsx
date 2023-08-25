@@ -28,7 +28,7 @@ const Signup_Signin_View=()=>{
 
   async function signin(){
     console.log(email,password)
-    const res= (await fetch(`${process.env.BASE_API}/api/signin`,{method:'POST',cache:'no-cache',body:JSON.stringify({email,password})}))
+    const res= await fetch(`https://jwt-with-zero-dev-jwt.vercel.app/api/signin`,{method:'POST',cache:'no-cache',body:JSON.stringify({email,password})})
     console.log(res)
     if(res.ok){
       setMessage('Redirecting ...')
@@ -41,7 +41,7 @@ const Signup_Signin_View=()=>{
 
   async function signup(){
     console.log(email,password);
-    const res=(await fetch(`${process.env.BASE_API}/api/signup`,{method:"POST",cache:'no-cache',body:JSON.stringify({email,password})}))
+    const res=await fetch(`https://jwt-with-zero-dev-jwt.vercel.app/api/signup`,{method:"POST",cache:'no-cache',body:JSON.stringify({email,password})})
     const jj=await res.json()
     console.log(jj)
     if(res.ok){
