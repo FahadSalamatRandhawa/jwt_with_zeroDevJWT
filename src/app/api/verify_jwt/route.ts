@@ -6,7 +6,7 @@ import { readFileSync } from "fs";
 export const POST=async(request:NextRequest)=>{
     const {jwt}=await request.json(); 
     try{
-        const public_key=readFileSync(process.cwd()+'/src/certs/public.pem','utf8');
+        const public_key=readFileSync('../src/certs/public.pem','utf8');
         console.log('Publickey in JWT_Verify API')
         console.log(public_key)
         try{
