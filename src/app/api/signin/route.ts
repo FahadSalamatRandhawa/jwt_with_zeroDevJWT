@@ -21,7 +21,7 @@ export const POST=async(request:NextRequest)=>{
         if(check_user.rows.length<1){
             return new NextResponse(JSON.stringify({message:'incorrect info'}),{status:400})
         }
-        const certsPath=path.join(serverRuntimeConfig.PROJECT_ROOT,'./certs')
+        const certsPath=path.join(process.cwd(),'./certs')
         const private_key=fs.readFileSync(certsPath+'/private.pem','utf8')
         const public_key=fs.readFileSync(certsPath+'public.pem','utf8')
         const public_hash=crypto.createHash('sha256').update(public_key).digest('base64')
