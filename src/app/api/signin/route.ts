@@ -13,7 +13,9 @@ export const POST=async(request:NextRequest)=>{
         let myCookies=cookies();
 
         const check_user=await db.query(`SELECT * from users WHERE email='${email}' AND password='${password}'`)
-        
+        if(check_user.rows.length<1){
+            return new NextResponse(JSON.stringify({message:'incorrect info'}),{status:400})
+        }
         const private_key=fs.readFileSync(process.cwd()+'/src/certs/private.pem','utf8')
         const public_key=fs.readFileSync(process.cwd()+'/src/certs/public.pem','utf8')
         const public_hash=crypto.createHash('sha256').update(public_key).digest('base64')

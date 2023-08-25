@@ -28,20 +28,21 @@ const Signup_Signin_View=()=>{
 
   async function signin(){
     console.log(email,password)
-    const res= await fetch(`https://jwt-with-zero-dev-jwt.vercel.app/api/signin`,{method:'POST',cache:'no-cache',body:JSON.stringify({email,password})})
+    const res= await fetch(`/api/signin`,{method:'POST',cache:'no-cache',body:JSON.stringify({email,password})})
     console.log(res)
     if(res.ok){
       setMessage('Redirecting ...')
       router.push('/dashboard')
     }else{
       setMessage('Wrong credentials')
+      console.log(await res.json())
     }
     return res;
   }
 
   async function signup(){
     console.log(email,password);
-    const res=await fetch(`https://jwt-with-zero-dev-jwt.vercel.app/api/signup`,{method:"POST",cache:'no-cache',body:JSON.stringify({email,password})})
+    const res=await fetch(`/api/signup`,{method:"POST",cache:'no-cache',body:JSON.stringify({email,password})})
     const jj=await res.json()
     console.log(jj)
     if(res.ok){
