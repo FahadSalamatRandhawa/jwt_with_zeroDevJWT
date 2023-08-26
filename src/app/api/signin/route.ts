@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
 import jwt from 'jsonwebtoken'
 import * as fs from "fs";
 import * as crypto from 'crypto';
-import path from "path";
+import * as forge from 'node-forge'
 
 
 export const POST=async(request:NextRequest)=>{
@@ -18,15 +18,17 @@ export const POST=async(request:NextRequest)=>{
         if(check_user.rows.length<1){
             return new NextResponse(JSON.stringify({message:'incorrect info'}),{status:400})
         }
-        const certsPath=path.join(process.cwd(),'/certs')
-        const private_key=fs.readFileSync(certsPath+'/private.pem','utf8')
-        const public_key=fs.readFileSync(certsPath+'public.pem','utf8')
+        //const certsPath=path.join(process.cwd(),'/certs')
+        //const private_key=fs.readFileSync(certsPath+'/private.pem','utf8')
+        //const public_key=fs.readFileSync(certsPath+'public.pem','utf8')
+        const private_key=Buffer.from(process.env.PRIVATE_KEY!.replace(/\n/g, '\n')).toString('utf8')
+        const public_key=Buffer.from(process.env.PUBLIC_KEY!.replace(/\n/g, '\n')).toString('utf8')
         const public_hash=crypto.createHash('sha256').update(public_key).digest('base64')
         console.log(public_hash)
         console.log('Before JWT')
         try{
             const token=jwt.sign({ data:email }, private_key, { algorithm:'RS256' , keyid:public_hash })
-            console.log(token)
+            console.log("JWT",token)
             myCookies.set('jwt',token)
             console.log('After JWT')
         }catch(e){

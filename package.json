@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-keys": "tsc ./src/certs/generateJWKS.ts && node ./src/certs/generateJWKS.js"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.1.0",
@@ -22,6 +23,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "crypto": "^1.0.1",
+    "dotenv": "^16.3.1",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.13",
     "fs": "0.0.1-security",
