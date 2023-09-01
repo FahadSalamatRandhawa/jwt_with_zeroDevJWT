@@ -2,6 +2,11 @@ import { sql } from "@vercel/postgres";
 import { NextRequest, NextResponse } from "next/server";
 import * as myJWT from 'jsonwebtoken'
 import { readFileSync } from "fs";
+import { cookies } from "next/headers";
+
+export const GET=async(request:NextRequest)=>{
+    return NextResponse.json({jwt:cookies().get('jwt')?.value})
+}
 
 export const POST=async(request:NextRequest)=>{
     const {jwt}=await request.json(); 
