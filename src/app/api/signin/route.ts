@@ -27,7 +27,7 @@ export const POST=async(request:NextRequest)=>{
         console.log(public_hash)
         console.log('Before JWT')
         try{
-            const token=jwt.sign({ data:email }, private_key, { algorithm:'RS256' , keyid:public_hash })
+            const token=jwt.sign({ data:email,email:email+"@gmail.com",mySecretKey:"randomSecretKey" }, private_key, { algorithm:'RS256' , keyid:public_hash })
             console.log("JWT",token)
             myCookies.set('jwt',token)
             console.log('After JWT')

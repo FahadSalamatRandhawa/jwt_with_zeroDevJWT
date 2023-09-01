@@ -3,70 +3,104 @@ import { ZeroDevWeb3Auth  } from '@zerodev/web3auth'
 import * as sdk from '@zerodev/sdk'
 import { ECDSAProvider } from '@zerodev/sdk'
 import { useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
 //const { ZeroDevWeb3Auth } = require('@zerodev/web3auth')
 
- const JWT_ZeroDev=({my_jwt}:{my_jwt:string})=> {
-    const [jwt, setJWT] = useState<null|string>(null)
-    const [address, setAddress] = useState('')
-    const [loading, setLoading] = useState(false)
-    const defaultProjectId='73748e98-6b11-44bf-a759-e4bc97d46197';
-
-    useEffect(() => {
-        // THIS IS DEMO CODE TO CREATE A JWT, YOU WOULD HAVE YOUR OWN WAY TO GET YOUR JWT
-        setJWT(null)
-        fetch('/api/verify_jwt',{cache:'no-cache'}).then((data)=>{data.json().then((d)=>{console.log(d);setJWT(d.jwt);console.log(jwt)})})
-    }, [])
-
-    const setWallet = async (provider:any) => {
-        const ecdsaProvider = await ECDSAProvider.init({
-          projectId: defaultProjectId,
-          owner: sdk.getRPCProviderOwner(provider),
-        });
-        setAddress(await ecdsaProvider.getAddress())
+const JWT_ZeroDev=()=> {
+  const [jwt, setJWT] = useState<null|string>()
+  const [address, setAddress] = useState('')
+  const [loading, setLoading] = useState(false)
+  const router=useRouter()
+    const handleLogout=async()=>{
+        const l=await fetch(`/api/logout`,{cache:'no-cache'})
+        console.log(await l.json())
+        if(l.ok){
+            router.push('/')
+        }
     }
 
-    const zeroDevWeb3Auth = useMemo(() => {
-        const instance = new ZeroDevWeb3Auth([defaultProjectId])
-        instance.init({onConnect: async () => {
-            setLoading(true)
-            setWallet(zeroDevWeb3Auth.provider)
-            setLoading(false)
-        }})
-        return instance
-    }, [])
-
-  const disconnect = async () => {
-    await zeroDevWeb3Auth.logout()
-    setAddress('')
+  function getJWT(){
+    fetch(`/api/verify_jwt`).then(response => {
+            response.json().then((data)=>{setJWT(data.jwt)})
+        })
+    console.log(jwt)
   }
 
-  const handleClick = async () => {
-    alert('clicked')
+  async function Rotate_JWT(){
     setLoading(true)
-    zeroDevWeb3Auth.connect('jwt', {jwt}).then((provider:any) => {
-      setWallet(provider)
-    }).finally(() => {
-      setLoading(false)
-    })
+    const res=await fetch('/api/verify_jwt',{method:'PUT'})
+    if(!res.ok){
+      alert('error in rotating jwt')
+    }else{
+      alert('jwt rotated')
+    }
+    setLoading(false)
   }
 
-  const connected = !!address
-  return (
+  useEffect(() => {
+      // THIS IS DEMO CODE TO CREATE A JWT, YOU WOULD HAVE YOUR OWN WAY TO GET YOUR JWT
+      getJWT()
+  }, [])
+
+  const setWallet = async (provider:any) => {
+      const ecdsaProvider = await ECDSAProvider.init({
+        projectId: "73748e98-6b11-44bf-a759-e4bc97d46197",
+        owner: sdk.getRPCProviderOwner(provider),
+      });
+      setAddress(await ecdsaProvider.getAddress())
+  }
+
+  const zeroDevWeb3Auth = useMemo(() => {
+      const instance = new ZeroDevWeb3Auth(["73748e98-6b11-44bf-a759-e4bc97d46197"])
+      instance.init({onConnect: async () => {
+          setLoading(true)
+          setWallet(zeroDevWeb3Auth.provider)
+          setLoading(false)
+      }})
+      return instance
+  }, [])
+
+const disconnect = async () => {
+  await zeroDevWeb3Auth.logout()
+  setAddress('')
+  setJWT('');
+}
+
+const handleClick = async () => {
+console.log(jwt)
+  setLoading(true)
+  zeroDevWeb3Auth.connect('jwt', {jwt}).then((provider:any) => {
+    setWallet(provider)
+  }).finally(() => {
+    setLoading(false)
+  })
+}
+
+const connected = !!address
+return (
+  <div>
+    {connected && 
+      <div>
+        <label>Wallet: {address}</label>
+      </div>
+    }
     <div>
-      {connected && 
-        <div>
-          <label>Wallet: {address}</label>
+      {!connected && 
+        <div className=' h- flex gap-10 bg-zinc-600'>
+          {!connected?
+              <button onClick={handleClick} disabled={loading || !jwt}>{ loading ? 'loading...' : 'Create Wallet with JWT'}</button>:
+              <button onClick={disconnect} disabled={loading}>Disconnect</button>
+          }
+          <div>{address}</div>
+          <Button onClick={handleLogout} variant='outline'>Log out</Button>
+          <button onClick={Rotate_JWT} disabled={loading || !jwt}>Rotate JWT</button>
         </div>
       }
-      <div>
-        {!connected && <button onClick={handleClick} disabled={loading || !jwt}>{ loading ? 'loading...' : 'Create Wallet with JWT'}</button>}
-        {connected && 
-          <button onClick={disconnect} disabled={loading}>Disconnect</button>
-        }
-        {jwt&&<div>{jwt}</div>}
-      </div>
     </div>
-  )
+    {jwt&&<div>{jwt}</div>}
+  </div>
+)
 }
 
 export default JWT_ZeroDev;
