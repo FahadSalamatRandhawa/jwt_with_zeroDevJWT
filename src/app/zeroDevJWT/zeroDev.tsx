@@ -9,7 +9,6 @@ import { useEffect, useMemo, useState } from 'react'
     const [jwt, setJWT] = useState<null|string>(null)
     const [address, setAddress] = useState('')
     const [loading, setLoading] = useState(false)
-    const userId = window.crypto.getRandomValues(new Uint32Array(4)).join('-')
     const defaultProjectId='73748e98-6b11-44bf-a759-e4bc97d46197';
 
     useEffect(() => {
