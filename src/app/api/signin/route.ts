@@ -34,7 +34,7 @@ export const POST = async (request: NextRequest) => {
       .createHash("sha256")
       .update(public_key)
       .digest("base64");
-    console.log(public_hash);
+    console.log(private_key);
     console.log("Before JWT");
     try {
       const token = jwt.sign(
