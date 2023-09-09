@@ -88,7 +88,7 @@ return (
           }
           <div>{address}</div>
           <div className=' flex gap-5'>
-            <Button onClick={Rotate_JWT} variant='outline' disabled={loading || !jwt}>Rotate JWT</Button>
+            <Button onClick={Rotate_JWT} variant='outline' disabled={loading}>Rotate JWT</Button>
             <Button onClick={handleLogout} variant='destructive'>Log out</Button>
           </div>
         </div>
