@@ -30,12 +30,13 @@ const Signup_Signin_View=()=>{
     console.log(email,password)
     const res= await fetch(`/api/signin`,{method:'POST',cache:'no-cache',body:JSON.stringify({email,password})})
     console.log(res)
+    const jsonObject=await res.json()
     if(res.ok){
       setMessage('Redirecting ...')
       router.push('/dashboard')
     }else{
       setMessage('Wrong credentials')
-      console.log(await res.json())
+      console.log(jsonObject)
     }
     return res;
   }

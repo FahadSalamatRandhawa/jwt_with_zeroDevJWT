@@ -51,11 +51,15 @@ export const POST = async (request: NextRequest) => {
       console.log("After JWT");
     } catch (e) {
       console.log(e);
-      return new NextResponse(e as any, { status: 400 });
+      return new NextResponse(JSON.stringify({ error: e as any }), {
+        status: 400,
+      });
     }
   } catch (e) {
     console.log(e);
-    return new NextResponse(e as any, { status: 400 });
+    return new NextResponse(JSON.stringify({ error: e as any }), {
+      status: 400,
+    });
   }
   return NextResponse.json({ success: "true" });
 };
